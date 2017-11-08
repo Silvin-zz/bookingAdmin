@@ -1,4 +1,13 @@
 
+Vue.component('modal', {
+    template: '#bs-modal',
+    data: function () {
+        console.log("### DATA");
+    },
+});
+
+
+
 
 const Clients       =   { 
                             template: '#client-list',
@@ -7,28 +16,60 @@ const Clients       =   {
                                 return{
                                     
                                     clients:[
-                                        {name: "Silvin"},
-                                        {name: "Pikino"}
+                                        {name: "", username: "", email: ""},
+                                        
                                     ]
                                 }
 
                             },
                             methods:{
-                                loadUsers: function() {
-console.log("LLegamos")
-                                  this.$http.get('http://jsonplaceholder.typicode.com/users', function(data, status, request){
-                                    if(status == 200)
-                                    {
-                                        console.log(data);
-                                      this.clients = data;
-                                    }
-                                  });
-                                }   
 
+
+
+                                loadUsers: function() {
+
+
+
+                                    var vm = this
+                                    axios.get("https://jsonplaceholder.typicode.com/users")
+                                      .then(response => {
+                                          // JSON responses are automatically parsed.
+                                          vm.clients = response.data
+                                        })
+                                        .catch(e => {
+                                          console.log(e)
+                                        })
+
+                                    
+
+                                },
+
+                                changeMessagess:function(message){
+
+                                    return message.split('').reverse().join('')
+                                }
                             },
-                            mounted: function () {
-                                this.loadUsers();
-                            }      
+                            watch:{
+
+                                clients:function(){
+
+                                    console.log("saludos")
+                                }
+                            },
+                            created: function(){
+
+                                this.loadUsers()
+                            },
+                            
+                            computed:{
+
+                                changeMessage:function(){
+
+                                    return "Hola".split('').reverse().join('')
+                                }
+                            }     
+
+
                         }
 const Configuration = { template: '#config-commision'   }
 const  Events       = { template: '#client-events'      }         

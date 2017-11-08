@@ -48,39 +48,66 @@
 
 
     
+    <!-- *****************  START OF TEMPLATES ********************* -->
 
+    <!-- Client Template -->
 
     <script type="text/x-template" id="client-list" >
-    <div class="table-responsive">
-            
-      <h1>Clients</h1>
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Add New Client</button>
-      <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Username</th>
-          <th>Comission Level</th>
-          <th>Options</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="client in clients">
-          <td>{{client.name}}</td>
-          <td>Dos</td>
-          <td>Tres</td>
-          <td><router-link class="nav-link" to="/client/edit">edit</router-link></td>
-  
-        </tr>
 
-      </tbody>
-    </table>    
-  </div>
+      <div class="table-responsive">
+
+        <div class="modal" tabindex="-1" role="dialog">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <p>Modal body text goes here.</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+              
+        <h1>Clients</h1>
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Add New Client</button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Modal</button>
+
+        <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Username</th>
+            <th>Comission Level</th>
+            <th>Options</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="client in clients">
+            <td>{{ client.name     }}</td>
+            <td>{{ client.username }}</td>
+            <td>{{ client.email    }}</td>
+            <td><button type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#exampleModal">edit</button></td>
+    
+          </tr>
+
+        </tbody>
+      </table>  
+
+    </div>
   </script>
 
 
 
-
+  <!-- Config Template -->
   <script type="text/x-template" id="config-commision" >
     <div class="table-responsive">
             
@@ -121,7 +148,7 @@
   </script>
 
 
-
+  <!-- Event Template -->
   <script type="text/x-template" id="client-events" >
     
     <div class="row table-responsive">
@@ -203,13 +230,15 @@
     </div>
   </script>
 
-
+  <!-- *****************  END OF TEMPLATES ********************* -->
 
     
     
 
     <script type="text/javascript" src="./src/scripts/general/vue.js"></script>
     <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
     <script type="text/javascript" src="./src/scripts/general/app.js"></script>
 
 
@@ -223,7 +252,7 @@
 
 
 
-<!--  TEMPLATES -->
+
 
 
 
