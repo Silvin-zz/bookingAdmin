@@ -11,6 +11,7 @@
 
     <!-- Bootstrap core CSS -->
     <link href="./src/styles/general/bootstrap/bootstrap.min.css" rel="stylesheet">
+    
 
     <!-- Custom styles for this template -->
     <link href="./src/styles/general/principal.css" rel="stylesheet">
@@ -29,7 +30,7 @@
         <nav class="col-sm-3 col-md-2 d-none d-sm-block bg-light sidebar">
           <ul class="nav nav-pills flex-column">
             <li class="nav-item">
-              <router-link class="nav-link" to="/config">Config</router-link>
+              <router-link class="nav-link" to="/config">Comissions</router-link>
             </li>
             <li class="nav-item">
               <router-link class="nav-link" to="/client">Clients</router-link>
@@ -56,21 +57,54 @@
 
       <div class="table-responsive">
 
-        <div class="modal" tabindex="-1" role="dialog">
+        <div class="modal " id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title">Modal title</h5>
+                <h5 class="modal-title" id="exampleModalLabel">New Client</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
               <div class="modal-body">
-                <p>Modal body text goes here.</p>
+                  
+                <form>
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Client Name</label>
+                    <input type="email" class="form-control" id="exampleInputEmail1"  v-model="newClient.Name"  aria-describedby="emailHelp"  placeholder="Enter Client name">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Username</label>
+                    <input type="email" class="form-control" id="exampleInputEmail1"  v-model="newClient.Username"  aria-describedby="emailHelp"  placeholder="Enter Client username">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">Password</label>
+                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password"  v-model="newClient.Password">
+                  </div>
+
+
+
+                  <!-- <div class="form-group">
+                    <label for="exampleInputEmail1">Comission</label>
+                    <select  v-model="newClient.Comission">
+                      <option v-for="comission in comissions"   v-bind:value="comission.Id">{{ comission.name }}</option>
+                    </select>
+                  </div> -->
+
+
+
+                  
+                  
+                </form>
+
+
+
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-primary">Save changes</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary"  v-on:click="saveClient()">Save changes</button>
               </div>
             </div>
           </div>
@@ -78,8 +112,7 @@
       
               
         <h1>Clients</h1>
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Add New Client</button>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Modal</button>
+        <button class="btn btn-outline-success my-2 my-sm-0" data-toggle="modal" data-target="#myModal">Add New Client</button>
 
         <table class="table table-striped">
         <thead>
@@ -87,16 +120,15 @@
             <th>Name</th>
             <th>Username</th>
             <th>Comission Level</th>
-            <th>Options</th>
+            
           </tr>
         </thead>
         <tbody>
           <tr v-for="client in clients">
-            <td>{{ client.name     }}</td>
-            <td>{{ client.username }}</td>
-            <td>{{ client.email    }}</td>
-            <td><button type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#exampleModal">edit</button></td>
-    
+            <td>{{ client.Name     }}</td>
+            <td>{{ client.Username }}</td>
+            <td>{{ getComission(client.Comission)    }}</td>
+            
           </tr>
 
         </tbody>
@@ -110,38 +142,78 @@
   <!-- Config Template -->
   <script type="text/x-template" id="config-commision" >
     <div class="table-responsive">
+
+
+
+      <div class="modal " id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">New Comission</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                  
+                <form>
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Comission Name</label>
+                    <input type="email" class="form-control" id="exampleInputEmail1"  v-model="newComission.name"  aria-describedby="emailHelp"  placeholder="Enter Comission name">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Value</label>
+                    <input type="number" class="form-control" id="exampleInputEmail1"  v-model="newComission.Value"  aria-describedby="emailHelp"  placeholder="Value Comission">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">Is Value Percent ?</label>
+                    <input type="checkbox" class="form-control" id="exampleInputPassword1"   v-model="newComission.IsPercent">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">Is a Default Comission ?</label>
+                    <input type="checkbox" class="form-control" id="exampleInputPassword1"   v-model="newComission.IsDefault">
+                  </div>
+
+
+                  <!-- <div class="form-group">
+                    <label for="exampleInputEmail1">Comission</label>
+                    <select  v-model="newClient.Comission">
+                      <option v-for="comission in comissions"   v-bind:value="comission.Id">{{ comission.name }}</option>
+                    </select>
+                  </div> -->
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary"  v-on:click="saveComission()">Save changes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+
             
       <h1>Comissions</h1>
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Add New Comission</button>
+      <button class="btn btn-outline-success my-2 my-sm-0" data-toggle="modal" data-target="#myModal">Add New Comission</button>
       <table class="table table-striped">
       <thead>
         <tr>
           <th>Name</th>
           <th>Comission</th>
-          <th>Options</th>
+          <th>Is Default</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Level 1</td>
-          <td><strong>5%</strong></td>
-          <td><router-link class="nav-link" to="/client/edit">edit</router-link></td>
-  
+        <tr v-for="comission in comissions">
+          <td>{{ comission.name }}</td>
+          <td><strong>{{ getValue(comission) }}</strong></td>
+          <td>{{ IsDefaultComission(comission) }}</td>
         </tr>
-      <tr>
-          <td>Level 1</td>
-          <td><strong>5%</strong></td>
-          <td><router-link class="nav-link" to="/client/edit">edit</router-link></td>
-  
-        </tr>
-
-      <tr>
-          <td>Level 1</td>
-          <td><strong>5%</strong></td>
-          <td><router-link class="nav-link" to="/client/edit">edit</router-link></td>
-  
-        </tr>
-
       </tbody>
     </table>    
   </div>
@@ -157,7 +229,7 @@
 
       <div class="row">
         <div class="col-sm-2">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Add New Event</button>
+          <button class="btn btn-outline-success my-2 my-sm-0" data-toggle="modal" data-target="#myModal">Add New Event</button>
         </div>
         <div class="col-sm-10">
           <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
@@ -167,83 +239,63 @@
       <br>
     
       <div class="row">
-        <div class="col-sm-4">
+        <div class="col-sm-4" v-for="event in events">
           <div class="card">
-            <div class="card-body bg-danger">
-              <h4 class="card-title">Special title treatment</h4>
-              <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+            <div  class="card-body bg-primary">
+              <h4 class="card-title">{{ event.Name }}</h4>
+              <p class="card-text">{{ event.Commision.name }}</p>
               <button type="button" class="btn btn-outline-success btn-sm">Calculate</button>
               <button type="button" class="btn btn-outline-warning btn-sm">Comission</button>
             </div>
           </div>
         </div>
-
-        <div class="col-sm-4">
-          <div class="card bg-success">
-            <div class="card-body">
-              <h4 class="card-title">Special title treatment</h4>
-              <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-              
-                <button type="button" class="btn btn-outline-success btn-sm">Calculate</button>
-                <button type="button" class="btn btn-outline-warning btn-sm">Comission</button>
-              
-            </div>
-          </div>
-        </div>
-
-
-        <div class="col-sm-4 ">
-          <div class="card bg-warning">
-            <div class="card-body">
-              <h4 class="card-title">Special title treatment</h4>
-              <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-              <button type="button" class="btn btn-outline-secondary btn-sm">Calculate</button>
-              <button type="button" class="btn btn-outline-secondary btn-sm">Comission</button>
-            </div>
-          </div>
-        </div>
-
-
-        <div class="col-sm-4">
-          <div class="card bg-info">
-            <div class="card-body">
-              <h4 class="card-title">Special title treatment</h4>
-              <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-              <button type="button" class="btn btn-outline-secondary btn-sm">Calculate</button>
-              <button type="button" class="btn btn-outline-secondary btn-sm">Comission</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-sm-4">
-          <div class="card">
-            <div class="card-body bg-primary">
-              <h4 class="card-title">Special title treatment</h4>
-              <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-              <button type="button" class="btn btn-outline-success btn-sm">Calculate</button>
-              <button type="button" class="btn btn-outline-warning btn-sm">Comission</button>
-            </div>
-          </div>
-        </div>
-
       </div>
+
+
+        
+      <div class="modal " id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              ...
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
     </div>
   </script>
 
   <!-- *****************  END OF TEMPLATES ********************* -->
 
-    
-    
 
-    <script type="text/javascript" src="./src/scripts/general/vue.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"> </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.min.js"></script>
     <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
-    <script type="text/javascript" src="./src/scripts/general/app.js"></script>
-
-
     
-
+    <script type="text/javascript" src="./src/scripts/general/const.js"></script>
+    <script type="text/javascript" src="./src/scripts/components/client.js"></script>
+    <script type="text/javascript" src="./src/scripts/components/comission.js"></script>
+    <script type="text/javascript" src="./src/scripts/components/event.js"></script>
+    <script type="text/javascript" src="./src/scripts/general/app.js"></script>
 
 
   </body>
