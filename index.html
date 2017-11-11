@@ -232,20 +232,18 @@
           <button class="btn btn-outline-success my-2 my-sm-0" data-toggle="modal" data-target="#myModal">Add New Event</button>
         </div>
         <div class="col-sm-10">
-          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+          <!-- <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" v-model="searchText"> -->
         </div>
-
       </div>
       <br>
     
       <div class="row">
-        <div class="col-sm-4" v-for="event in events">
+        <div class="col-sm-4" v-for="event in events   ">
           <div class="card">
-            <div  class="card-body bg-primary">
+            <div  class="card-body  bg-warning">
               <h4 class="card-title">{{ event.Name }}</h4>
-              <p class="card-text">{{ event.Commision.name }}</p>
-              <button type="button" class="btn btn-outline-success btn-sm">Calculate</button>
-              <button type="button" class="btn btn-outline-warning btn-sm">Comission</button>
+              <p class="card-text"><strong>Comission: </strong>{{ event.Commision.name }} <br><strong>Extra Value ticket: </strong><span class="badge badge-success">{{  getValueComission(event.Commision)  }}</span></p>
+              <button type="button" class="btn btn-primary btn-sm"  data-toggle="modal" v-on:click="showCalculate(event)" data-target="#myCalculateModal">Calculate</button>
             </div>
           </div>
         </div>
@@ -254,24 +252,107 @@
 
         
       <div class="modal " id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              ...
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">New Event</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                  
+                <form>
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Event Name</label>
+                    <input type="email" class="form-control" id="exampleInputEmail1"  v-model="newEvent.Name"  aria-describedby="emailHelp"  placeholder="Enter event name">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Client</label>
+                    <select  v-model="newEvent.ClientId">
+                      <option v-for="client in clients"   v-bind:value="client.Id">{{ client.Name }}</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Comission</label>
+                    <select  v-model="newEvent.Comission">
+                      <option v-for="comission in comissions"   v-bind:value="comission.Id">{{ comission.name }}</option>
+                    </select>
+                  </div>
+
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary"  v-on:click="saveEvent()">Save changes</button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+
+
+
+      <div class="modal " id="myCalculateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">{{selectedEvent.Name}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                  
+                <form>
+
+
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Comission</label>
+                    <p><strong>{{ getValueComission(selectedEvent.Commision) }}</strong></p>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Quantity</label>
+                    <input type="number" class="form-control" id="exampleInputEmail1"  v-model="selectedEvent.TicketQuantity"  aria-describedby="emailHelp"  placeholder="Enter ticket Cost">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Ticket Cost</label>
+                    <input type="number" class="form-control" id="exampleInputEmail1"  v-model="selectedEvent.TicketCost"  aria-describedby="emailHelp"  placeholder="Enter ticket Cost">
+                  </div>
+
+                </form>
+
+                
+                <div class="row align-items-end">
+                  <div class="col-8 text-right"><strong>Subtotal:</strong></div>
+                  <div class="col-4 text-right">${{Subtotal}}</div>
+                </div>
+
+                <div class="row align-items-end">
+                  <div class="col-8 text-right"><strong>Total Comission:</strong></div>
+                  <div class="col-4 text-right">${{TotalComission}}</div>
+                </div>
+
+                <div class="row align-items-end">
+                  <div class="col-8 text-right"><strong>Total:</strong></div>
+                  <div class="col-4 text-right">${{Cost}}</div>
+                </div>
+
+
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary"  v-on:click="calculateCost()">Calculate Cost</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
 
 
 
